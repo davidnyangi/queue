@@ -633,10 +633,27 @@ convert(date,oc_encounter_begindate) = CONVERT(date, getdate()) and OC_ENCOUNTER
 				
 				 date_default_timezone_set('Africa/Nairobi');
 				 $todaysdate = date('Y-m-d h:i:s a', time());
+				 $getTodaysDate = date('Y-m-d');
+
+				 $countPatientsInQueue = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_TODAYSQUEUES where CAST(OC_QUEUE_BEGIN as date)=? and OC_QUEUE_ID=?',[$getTodaysDate,$qs]);
+                // $countPatientsInQueue = Encounters::where('OC_ENCOUNTER_BEGINDATE','=',$getTodaysDate)->count();
+                $countPatientsInQueue = collect($countPatientsInQueue);
+			 	 $countPatientsInQueue = $countPatientsInQueue->count();
+			 	 $token = $countPatientsInQueue+1;
+			 	 if($qs=='1')
+			 	 	$token = 'A - '.$token;
+			 	 else if($qs=='2')
+			 	 	$token = 'B - '.$token;
+			 	 	else if($qs=='3')
+			 	 	$token = 'C - '.$token;
+			 	 	else if($qs=='4')
+			 	 	$token = 'D - '.$token;
+			 	 	else if($qs=='5')
+			 	 	$token = 'E - '.$token;
                  $saveQueue = DB::connection('sqlsrv')->insert('insert into openclinic.dbo.OC_TODAYSQUEUES(OC_QUEUE_ID,OC_QUEUE_SUBJECTUID,OC_QUEUE_BEGIN,OC_QUEUE_PATIENTNUMBER) values (?,?,?,?)',[$qs,$pname,$todaysdate,$token]);
-                // $queues = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_AVAILABLEQUEUES');
-                 if($saveQueue)
-	            return response()->json(array('sms'=>'1'));
+                              
+                if($saveQueue)
+	            return response()->json(array('sms'=>'1','sms2'=>$countPatientsInQueue));
         		else
 	            return response()->json(array('sms'=>'2'));
 		}catch(\Exception $e) {

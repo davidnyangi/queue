@@ -494,7 +494,7 @@
             </div>
         </div>
         <div id="outprint" style="display:none;">
-            <center>Welcome to CCBRT!</center>
+            <center>ASANTE NA UGUA POLE</center>
             
             <img style="display: none;" src="{{asset('images/logo.png')}}" alt="IMG">
         </div>
@@ -602,10 +602,29 @@
                 data: assignqueueform,
                 success:function(response){
                      if((response.sms==1 )){
-                         $('.isa_error').slideUp("slow");
+                        //alert(response.sms2);
+                        $('.isa_error').slideUp("slow");
                         $('.isa_success').text('PATIENT SUCCESSFULLY ASSIGNED')
                         $('.isa_success').slideDown("slow");
-                        PrintElem('outprint');
+                        if($('#qs').val()=='1')
+                            var b='A - ';
+                        else if($('#qs').val()=='2')
+                            var b='B - ';
+                        else if($('#qs').val()=='3')
+                            var b='C - ';
+                        else if($('#qs').val()=='4')
+                            var b='D - ';
+                        else if($('#qs').val()=='5')
+                            var b='E - ';
+                        else if($('#qs').val()=='6')
+                            var b='F - ';
+                        else if($('#qs').val()=='7')
+                            var b='G - ';
+                        else if($('#qs').val()=='8')
+                            var b='H - ';
+                        else if($('#qs').val()=='9')
+                            var b='I - ';
+                        PrintElem('outprint',response.sms2,b);
                      }
                  },error:function(response){
                       $('.isa_error').text(response.responseJSON.error)
@@ -614,15 +633,16 @@
             });
         }
     });
-    function PrintElem(elem)
+    function PrintElem(elem, a,c)
         {
             var mywindow = window.open('', 'PRINT', 'height=400,width=600');
             mywindow.document.write('<html><head><title>CCBRT</title>');
             mywindow.document.write('</head><body>');
-            mywindow.document.write('<center><img src="{{asset("images/logo.png")}}" height="80" width="100"/></center>');
-            mywindow.document.write('<p>Name: '+ fullname +'</p>');
+            mywindow.document.write('<center><img src="{{asset("images/logo.png")}}" height="60" width="75"/></center>');
+            mywindow.document.write('<p>'+ fullname +'</p>');
             mywindow.document.write('<p>IP: '+ patientip +' &nbsp;&nbsp;&nbsp;Department: '+ dept +'</p>');
-            mywindow.document.write('<p><center><h1><b> '+ queues +'</b></h1></center></p>');
+            mywindow.document.write('<span>Namba ya Tiketi Yako Ni:</span>');
+            mywindow.document.write('<p><center><h1><b> '+ c +''+(a+1) +'</b></h1></center></p>');
             mywindow.document.write(document.getElementById(elem).innerHTML);
             mywindow.document.write('</body></html>');
             mywindow.document.close(); // necessary for IE >= 10

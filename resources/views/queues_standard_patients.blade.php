@@ -133,45 +133,11 @@
                                     <a href="{{URL::to('waiting_private_patients')}}">
                                         <span>Private Clinic</span>
                                     </a>
-                                    <ul class="ml-menu">
-                                        <li>
-                                            <a href="pages/widgets/cards/basic.html">EYE</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/cards/colored.html">ORTHO</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/cards/no-header.html">ENT</a>
-                                        </li>
-                                    </ul>
                                 </li>
                                 <li class="active">
                                     <a href="{{URL::to('waiting_standard_patients')}}">
                                         <span>Standard Clinic</span>
                                     </a>
-                                    <!-- <ul class="ml-menu">
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-1.html">EYE</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-2.html">ORTHO</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-3.html">ENT</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-4.html">GYN</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-5.html">VVF</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-5.html">OPT</a>
-                                        </li>
-                                        <li>
-                                            <a href="pages/widgets/infobox/infobox-5.html">REHAB</a>
-                                        </li>
-                                    </ul> -->
                                 </li>
                             </ul>
                         </li>
