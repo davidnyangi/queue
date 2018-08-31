@@ -567,7 +567,7 @@
                                     <p><b>Select Room</b></p>
                                     <form  class="assignqueue-form validate-form" method="post" action="/getqueuesperroom" id="searchqueueform">
                                                     {{ csrf_field() }}
-                                        <select class="form-control show-tick changeRoom" name="changeRoom">
+                                        <select class="form-control show-tick changeRoom" name="changeRoom" data-dependent="retrievedQueues">
                                             <option value="">-- Please select a room --</option>
                                             @if($rooms)
                                                 @foreach($rooms as $room)
@@ -579,13 +579,20 @@
                                 </div>
                                 <div class="col-md-12">
                                      <p><b>Queue to Call</b></p>
-                                        <select class="form-control show-tick allqs" name="qs" id="retrievedQueues">
-                                            <!-- <option value="">-- Please select a queue --</option> -->
+                                        <select class="form-control show-tick allqs" name="qs" id="retrievedQueues" data-dependent="queues">
+                                            <option value="">-- Please select a queue --</option>
+                                           <!--  @if($queues)
+                                                @foreach($queues as $queue)
+                                                    <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}} ({{$queue->OC_QUEUES_ASSIGNEDDEPTID}} )</option>
+                                                @endforeach
+                                            @endif -->
                                         </select>
                                         <button type="button" id="speak" class="btn btn-primary m-t-15 waves-effect">CALL PATIENT</button>
                                        <button type="button" class="btn btn-primary m-t-15 waves-effect pull-right"  id ="callnext" style="display:none" >CALL NEXT</button>
                                 </div>
+                                {{ csrf_field() }}
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -595,6 +602,26 @@
                             <div class="row clearfix">
                                 <div class="col-xs-12 col-sm-6">
                                     <h2>ON CALL</h2>
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <p><b>Patient Name: <p id="msg" style="display:none;"></p> 
+                                    <p><b> @if($patientTobeCalled)
+                                    @foreach($patientTobeCalled as $patientTobeCall)
+                                    <span data-name="{{$patientTobeCall->patientname}}">{{$patientTobeCall->patientname}}</span>
+                                    </b></p>
+                                    <input type="checkbox" id="seen" class="filled-in2" name="seen"/>
+                                    <label for="seen">Seen</label>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <p><b>Queue Number: 
+                                    </b></p>
+                                    <p><b>
+                                    {{$patientTobeCall->queueno}}
+                                    @endforeach
+                                    @endif
+                                    </b></p>
+                                    <input type="checkbox" id="noshow" class="filled-in2" name="noshow"/>
+                                    <label for="noshow">No Show</label>
+                                </div>
                                 </div>
                                 
                             </div>
@@ -625,7 +652,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="row clearfix">
+            <div class="row clearfix">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="header">
@@ -690,7 +717,7 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div id="outprint" style="display:none;">
             Welcome to CCBRT
@@ -742,34 +769,55 @@ var jina = $(this).data('name');
          // $("#outprint").printArea({ mode: 'popup', popClose: true });
 
     });
-    $('select.changeRoom').change(function(){
+ //   $('.changeRoom').change(function(){
+ //  $('#retrievedQueues').val('');
+ // });
 
-        var searchqueueform = $('#searchqueueform').serializeArray();
-        var url = $('#searchqueueform').attr('action');
-      var selectedRoom = $('select.changeRoom').val();
+    // $('select.changeRoom').change(function(){
+
+    //     var searchqueueform = $('#searchqueueform').serializeArray();
+    //     var url = $('#searchqueueform').attr('action');
+    //   var selectedRoom = $('select.changeRoom').val();
     
-       $.ajax({
-           type: 'POST',
-          url: url,
-          data: searchqueueform,
-          success: function(response){ 
-            if((response.sms==1 )){
-                // for (var i = 0; i < response.allqueues.length; i++) {
-                //  $(".allqs").append("<option value= "+response.allqueues[i].OC_QUEUES_OBJECTID+">" + response.allqueues[i].OC_QUEUES_QUEUENAME + "</option>");
-                // }
-                $.each(response.allqueues, function (i, item) {
-                    $('#retrievedQueues').append($('<option>', { 
-                        value: response.allqueues[i].OC_QUEUES_QUEUENAME,
-                        text : response.allqueues[i].OC_QUEUES_QUEUENAME  
-                    }));
-                   // alert("asdf");
-                });
-            }
-          },error:function(response){
-                     ALERT('error');
-            }
-        });
+    //    $.ajax({
+    //        type: 'POST',
+    //       url: url,
+    //       data: searchqueueform,
+    //       success: function(response){ 
+    //         if((response.sms==1 )){
+    //             // for (var i = 0; i < response.allqueues.length; i++) {
+    //             //  $(".allqs").append("<option value= "+response.allqueues[i].OC_QUEUES_OBJECTID+">" + response.allqueues[i].OC_QUEUES_QUEUENAME + "</option>");
+    //             // }
+    //             $.each(response.allqueues, function (i, item) {
+    //                 $('#retrievedQueues').append($('<option>', { 
+    //                     value: response.allqueues[i].OC_QUEUES_QUEUENAME,
+    //                     text : response.allqueues[i].OC_QUEUES_QUEUENAME  
+    //                 }));
+    //                // alert("asdf");
+    //             });
+    //         }
+    //       },error:function(response){
+    //                  ALERT('error');
+    //         }
+    //     });
 
+    // });
+    $('.changeRoom').change(function(){
+        if($(this).val() !=''){
+            var select = $(this).attr("id");
+            var value = $(this).val();
+            var dependent = $(this).data('dependent');
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url:"{{route('getQueues')}}",
+                method: "POST",
+                data:{select:select, value:value, _token:_token, dependent:dependent},
+                success:function(result){
+                    $('#'+dependent).html(result);
+                }
+            })
+        }
     });
     $("#noshow").change(function (){ 
       $('#callnext').toggle();

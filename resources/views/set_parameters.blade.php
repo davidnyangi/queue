@@ -19,7 +19,7 @@
 <link href="../../plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <!-- Waves Effect Css -->
     <link href="{{asset('plugins/node-waves/waves.css')}}" rel="stylesheet" />
-
+    <link href="{{asset('plugins/multi-select/css/multi-select.css')}}" rel="stylesheet">
     <!-- Animation Css -->
     <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
 
@@ -569,6 +569,22 @@
                                                 @endforeach
                                             @endif
                                         </select>
+                                      <!--   <select class="form-control show-tick" name="dpt" id="dpt">
+                                            <option value="">-- Please select a Department --</option>
+                                                @if($depts)
+                                                    @foreach($depts as $dept)
+                                                        <option value="{{$dept->OC_ENCOUNTER_SERVICEUID}}">{{$dept->OC_ENCOUNTER_SERVICEUID}}</option>
+                                                    @endforeach
+                                                @endif
+                                        </select>
+                                        <select class="form-control show-tick allrooms" name="screenname" id="screenname">
+                                            <option>-- Please Select a Screen --</option>
+                                            @if($screens)
+                                                @foreach($screens as $screen)
+                                                    <option value="{{$screen->OC_QUEUESCREEN_OBJECTID}}">{{$screen->OC_QUEUESCREEN_NAME}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select> -->
                                         <button type="button" id="assignqueuetoroom" class="btn btn-primary m-t-15 waves-effect">ASSIGN</button>
                                     </form>
                                 </div>
@@ -669,6 +685,40 @@
                 </div>
             </div>
             <!-- End of Second Row -->
+            <!-- Multi select Starts here -->
+            <!-- <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                               ASSIGN QUEUE TO SCREEN
+                            </h2>
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="javascript:void(0);">Action</a></li>
+                                        <li><a href="javascript:void(0);">Another action</a></li>
+                                        <li><a href="javascript:void(0);">Something else here</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <select id="optgroup" class="ms" multiple="multiple">
+                                    @if($queues)
+                                        @foreach($queues as $queue)
+                                            <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}} ({{$queue->OC_QUEUES_ASSIGNEDDEPTID}} )</option>
+                                        @endforeach
+                                    @endif
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- End of Multi Select -->
         </div>
     </section>
 
@@ -676,6 +726,7 @@
     <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
     <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
+    <script src="{{asset('plugins/multi-select/js/jquery.multi-select.js')}}"></script>
     <script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
     <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
     <script src="{{asset('plugins/jquery-countto/jquery.countTo.js')}}"></script>
@@ -732,6 +783,11 @@
   $('#roomdesc').keyup(function() {
     removeError();
     removeSuccess();
+  });
+  $('#optgroup').multiSelect({
+     afterSelect: function(values){
+        alert("Select value: "+values);
+      }
   });
 $('#assignqueuetoroom').on('click',function(e){
     e.preventDefault();

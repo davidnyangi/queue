@@ -83,7 +83,7 @@
                                         <center><h1  style="font-size: 1px;display: none;">Q - {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center>
                                         <?php $n++; ?>
                                         @else
-                                        <center><h1  style="font-size: 100px;">Q - {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center> <hr/>
+                                        <center><h1  style="font-size: 100px;"> {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center> <hr/>
                                         @endif
                                     @endforeach
                             @endif

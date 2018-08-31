@@ -353,7 +353,7 @@
                                             <th>Clinic</th>
                                             <th>Ticket Printed?</th>
                                             <th>Start Time</th>
-                                            <!-- <th>Patient Status</th> -->
+                                            <th>Patient Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -378,9 +378,7 @@
                                                     <td>{{$todayQueue->Printed}}</td>
                                                     <td id="patienttime">{{ $todayQueue->Timea}}</td>
                                                     <!-- <td id="patientwaittime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td> -->
-                                                    <!-- <td id="patientstatus"><span class="badge badge-secondary" style="background:purple;boarder-radius:2px;">To be Called</span></td> -->
-                                                    <td><button id="printQueues" type="button" class="btn btn-primary waves-effect"  data-patientname="{{ $todayQueue->firstname}} &nbsp; {{ $todayQueue->lastname}}" data-dept="{{$deptname}}" data-queue="{{$dept}}" data-patientip="{{ $todayQueue->Encounter_ip}}" data-starttime="{{ $todayQueue->Timea}}" data-waitingtime="{{ $todayQueue->Wait}}" data-encounterdept="{{ $todayQueue->Department}}" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#defaultModal">PRINT</button>
-                                                    </td>
+                                                    <td id="patientstatus"><span class="badge badge-secondary" style="background:purple;boarder-radius:2px;">{{$todayQueue->pstatus}}</span></td>
                                                 </tr>
                                                 @endforeach
                                             @else

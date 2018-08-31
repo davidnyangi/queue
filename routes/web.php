@@ -30,9 +30,12 @@ Route::post('login','LoginController@login');
 Route::post('savequeuetoroom','StaffDashboard@assignqueuetoroom');
 Route::post('savescreenname','StaffDashboard@savescreens');
 Route::post('saveroomname','StaffDashboard@saverooms');
+Route::get('tabular_reports','ReportsController@getTables');
+Route::get('graphical_reports','ReportsController@getGraphs');
 Route::post('assignqueue','StaffDashboard@assignpatienttoqueue');
 Route::post('getqueuesperroom','StaffDashboard@getroomsqueue');
 Route::post('savequeuetoscreen','StaffDashboard@setDefaultDisplayQueue');
+Route::post('getQueues',array('as'=>'getQueues','uses'=>'StaffDashboard@fetch'));
 Route::post('savequeuetodept','StaffDashboard@assignqueuetodepts');
 Route::get('admin', function () {
     return view('dashboard_admin');
