@@ -18,21 +18,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></script>
 </head>
 <body class="theme-green">
-    <!-- <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <p>Please wait...</p>
-        </div>
-    </div> -->
     <div class="overlay"></div>
     <div class="search-bar">
         <div class="search-icon">
@@ -52,11 +37,9 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                  <!--   <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">launch</i></a></li> -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">launch</i>
-                            <!-- <span class="label-count">7</span> -->
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">CHOOSE SCREEN</li>
@@ -76,7 +59,6 @@
                                         </li>
                                         @endforeach
                                     @endif
-                                    
                                 </ul>
                             </li>
                             <li class="footer">
@@ -96,8 +78,8 @@
                     <img src="images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">David Nyangi</div>
-                    <div class="email">david.nyangi@ccbrt.org</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</div>
+                    <!-- <div class="email">david.nyangi@ccbrt.org</div> -->
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -352,7 +334,7 @@
                                             <th>Department</th>
                                             <th>Clinic</th>
                                             <th>Ticket Printed?</th>
-                                            <th>Start Time</th>
+                                            <th>Arrival Time</th>
                                             <!-- <th>Patient Status</th> -->
                                             <th>Action</th>
                                         </tr>
@@ -462,7 +444,6 @@
     <script src="{{asset('js/admin.js')}}"></script>
     <script src="{{asset('js/pages/index.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
-
     <script type="text/javascript">
     // var win = window.open('{{URL::to('/waitingpatients')}}', '_blank');
     // if (win) {
@@ -567,7 +548,8 @@
                             var b='H - ';
                         else if($('#qs').val()=='9')
                             var b='I - ';
-                        PrintElem('outprint',response.sms2,b);
+                        //Display Printing Dialog
+                       // PrintElem('outprint',response.sms2,b);
                      }
                  },error:function(response){
                       $('.isa_error').text(response.responseJSON.error)

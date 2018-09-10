@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Queues extends Model
 {
-    protected $table = 'ocadmin.dbo.QueueCalls';
+    protected $table = 'openclinic.dbo.OC_AVAILABLEQUEUES';
 }

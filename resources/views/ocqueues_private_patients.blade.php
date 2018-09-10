@@ -18,21 +18,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></script>
 </head>
 <body class="theme-green">
-    <!-- <div class="page-loader-wrapper">
-        <div class="loader">
-            <div class="preloader">
-                <div class="spinner-layer pl-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-            <p>Please wait...</p>
-        </div>
-    </div> -->
     <div class="overlay"></div>
     <div class="search-bar">
         <div class="search-icon">
@@ -52,11 +37,9 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                  <!--   <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">launch</i></a></li> -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">launch</i>
-                            <!-- <span class="label-count">7</span> -->
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">CHOOSE SCREEN</li>
@@ -76,7 +59,6 @@
                                         </li>
                                         @endforeach
                                     @endif
-                                    
                                 </ul>
                             </li>
                             <li class="footer">
@@ -96,8 +78,8 @@
                     <img src="images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">David Nyangi</div>
-                    <div class="email">david.nyangi@ccbrt.org</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</div>
+                    <!-- <div class="email">david.nyangi@ccbrt.org</div> -->
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -352,8 +334,8 @@
                                             <th>Department</th>
                                             <th>Clinic</th>
                                             <th>Ticket Printed?</th>
-                                            <th>Start Time</th>
-                                            <th>Patient Status</th>
+                                            <th>Arrival Time</th>
+                                            <!-- <th>Patient Status</th> -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -365,11 +347,25 @@
                                                 <tr>
                                                     <td id="queuenumber"><?php echo $n ?></td>
                                                     <td id="patientname">{{ $todayQueue->firstname}} &nbsp; {{ $todayQueue->lastname}}</td>
-                                                    <td id="patientip">{{ $todayQueue->OC_QUEUE_SUBJECTUID}}</td> cv b
+                                                    <td id="patientip">{{ $todayQueue->Encounter_ip}}</td>
+                                                    <td>@if(strpos($todayQueue->Department, 'PRV') !== false)
+                                                    <?php $deptname = 'Private' ?>
+                                                    Private
+                                                    @elseif(strpos($todayQueue->Department, 'STD') !== false)
+                                                    <?php $deptname = 'Standard' ?>
+                                                    Standard
+                                                    @endif
+                                                    </td>
+                                                    <td>{{substr($todayQueue->Department,4,3)}}</td>
+                                                    <td>{{$todayQueue->Printed}}</td>
+                                                    <td id="patienttime">{{ $todayQueue->Timea}}</td>
+                                                    <!-- <td id="patientwaittime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td> -->
+                                                    <!-- <td id="patientstatus"><span class="badge badge-secondary" style="background:purple;boarder-radius:2px;">To be Called</span></td> -->
+                                                    <td><button id="printQueues" type="button" class="btn btn-primary waves-effect"  data-patientname="{{ $todayQueue->firstname}} &nbsp; {{ $todayQueue->lastname}}" data-dept="{{$deptname}}" data-queue="{{$dept}}" data-patientip="{{ $todayQueue->Encounter_ip}}" data-starttime="{{ $todayQueue->Timea}}" data-waitingtime="{{ $todayQueue->Wait}}" data-encounterdept="{{ $todayQueue->Department}}" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#defaultModal">PRINT</button>
+                                                    </td>
                                                 </tr>
                                                 @endforeach
                                             @else
-                                            <p><strong>Invalid: </strong> No Patients Yet</p>
                                             @endif
                                     </tbody>
                                 </table>
@@ -390,12 +386,16 @@
                                                            <i class="fa fa-times-circle"></i>
                                                         </div>
                                                         <div class="form-line">
-                                                            <strong>Name: </strong><div id="pname"></div>
-                                                            <div class="form-line">
-                                                                <input type="text" class="form-control" name = "pname2" id = "pname2" style="display:none;" />
-                                                                <input type="text" class="form-control" name = "qnumber" id = "qnumber" style="display:none;" />
-                                                            </div>
-                                                            <strong>Dept: </strong><div class="Patient-ip" id="dept"></div>
+                                                            @if($todaysQueue)
+                                                                @foreach($todaysQueue as $todayQueue)
+                                                                <strong>Name: </strong><div id="pname">{{ $todayQueue->firstname}} &nbsp; {{ $todayQueue->lastname}}</div>
+                                                                <div class="form-line">
+                                                                    <input type="text" class="form-control" name = "pname2" id = "pname2" value="{{ $todayQueue->Encounter_ip}}" style="display:none;" />
+                                                                    <input type="text" class="form-control" name = "qnumber" id = "qnumber" style="display:none;" />
+                                                                </div>
+                                                                <strong>Dept: </strong><div class="Patient-ip" id="dept">{{$todayQueue->Department}}</div>
+                                                                @endforeach
+                                                            @endif
                                                         </div><hr/>
                                                         <select class="form-control show-tick" name="qs" id="qs">
                                                             <option value="">-- Please select a queue --</option>
@@ -447,16 +447,15 @@
     <script src="{{asset('js/admin.js')}}"></script>
     <script src="{{asset('js/pages/index.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
-
     <script type="text/javascript">
-    // var win = window.open('{{URL::to('/waitingpatients')}}', '_blank');
-    // if (win) {
-    //     //Browser has allowed it to be opened
-    //     win.focus();
-    // } else {
-    //     //Browser has blocked it
-    //     alert('Please allow popups for this website');
-    // }
+    $(window).on('load',function(){
+        $('#defaultModal').modal('show');
+
+    })
+    $('#defaultModal').modal({
+        backdrop:'static',
+        keyboard:false
+    })
     function autoRefreshPage()
     {
         window.location = window.location.href;
@@ -468,6 +467,7 @@
         $('.isa_error').slideUp("slow");
         $('.isa_success').slideUp("slow");
     window.location = window.location.href;
+    window.close();
     });
     var fullname,queues,patientip,starttime,waitingtime,dept;
    $(".queues").on("click", "#printQueues", function (){ 
@@ -552,7 +552,8 @@
                             var b='H - ';
                         else if($('#qs').val()=='9')
                             var b='I - ';
-                        PrintElem('outprint',response.sms2,b);
+                        //Display Printing Dialog
+                       // PrintElem('outprint',response.sms2,b);
                      }
                  },error:function(response){
                       $('.isa_error').text(response.responseJSON.error)

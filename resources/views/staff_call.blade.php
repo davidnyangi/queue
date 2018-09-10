@@ -15,7 +15,7 @@
 
     <!-- Bootstrap Core Css -->
     <link href="{{asset('plugins/bootstrap/css/bootstrap.css')}}" rel="stylesheet">
-<link href="../../plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
     <!-- Waves Effect Css -->
     <link href="{{asset('plugins/node-waves/waves.css')}}" rel="stylesheet" />
 
@@ -30,8 +30,8 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{{asset('css/themes/all-themes.css')}}" rel="stylesheet" />
-     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></script>
-     <style type="text/css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></script>
+    <style type="text/css">
      #speech-msg{
     outline: none;
 }</style>
@@ -39,7 +39,7 @@
 
 <body class="theme-green">
     <!-- Page Loader -->
-    <div class="page-loader-wrapper">
+   <!--  <div class="page-loader-wrapper">
         <div class="loader">
             <div class="preloader">
                 <div class="spinner-layer pl-red">
@@ -53,7 +53,7 @@
             </div>
             <p>Please wait...</p>
         </div>
-    </div>
+    </div> -->
     <!-- #END# Page Loader -->
     <!-- Overlay For Sidebars -->
     <div class="overlay"></div>
@@ -284,8 +284,8 @@
                     <img src="images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">David Nyangi</div>
-                    <div class="email">david.nyangi@ccbrt.org</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</div>
+                    <!-- <div class="email">david.nyangi@ccbrt.org</div> -->
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -343,25 +343,40 @@
                             <span>Set Parameters</span>
                         </a>
                     </li>
-                   
-                    <li class="header">LABELS</li>
                     <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-red">donut_large</i>
-                            <span>Report an Error</span>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">widgets</i>
+                            <span>Reports</span>
                         </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-amber">donut_large</i>
-                            <span>Open Ticket</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-light-blue">donut_large</i>
-                            <span>Information</span>
-                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <span>Tabular</span>
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{{URL::to('tabular_reports_seen')}}">
+                                            <span>Today's Patients Seen</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{URL::to('graphical_reports')}}">
+                                            <span>Today's Patients Transfered</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{URL::to('graphical_reports')}}">
+                                            <span>Today's Patients with No show</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{URL::to('graphical_reports')}}">
+                                    <span>Graphs</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -540,34 +555,12 @@
                             </div>
                         </div>
                         <div class="body">
-                            <!-- <div class="row clearfix">
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                    <p><b>Patient Name: <p id="msg" style="display:none;"></p> 
-                                    <p><b> @if($patientTobeCalled)
-                                    @foreach($patientTobeCalled as $patientTobeCall)
-                                    <span data-name="{{$patientTobeCall->patientname}}">{{$patientTobeCall->patientname}}</span>
-                                    </b></p>
-                                    <input type="checkbox" id="seen" class="filled-in2" name="seen"/>
-                                    <label for="seen">Seen</label>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                    <p><b>Queue Number: 
-                                    </b></p>
-                                    <p><b>
-                                    {{$patientTobeCall->queueno}}
-                                    @endforeach
-                                    @endif
-                                    </b></p>
-                                    <input type="checkbox" id="noshow" class="filled-in2" name="noshow"/>
-                                    <label for="noshow">No Show</label>
-                                </div>
-                            </div> -->
                             <div class="row clearfix newcall">
-                                <div class="col-md-12">
-                                    <p><b>Select Room</b></p>
-                                    <form  class="assignqueue-form validate-form" method="post" action="/getqueuesperroom" id="searchqueueform">
-                                                    {{ csrf_field() }}
-                                        <select class="form-control show-tick changeRoom" name="changeRoom" data-dependent="retrievedQueues">
+                                <form class="form-horizontal" role="form" method="POST" action="">
+                                    {{ csrf_field() }}
+                                    <div class="col-md-12">
+                                        <p><b>Select Room</b></p>
+                                        <select class="form-control" name="changeRoom" id="changesRoom">
                                             <option value="">-- Please select a room --</option>
                                             @if($rooms)
                                                 @foreach($rooms as $room)
@@ -575,62 +568,86 @@
                                                 @endforeach
                                             @endif
                                         </select>
-                                    </form>
-                                </div>
-                                <div class="col-md-12">
-                                     <p><b>Queue to Call</b></p>
-                                        <select class="form-control show-tick allqs" name="qs" id="retrievedQueues" data-dependent="queues">
-                                            <option value="">-- Please select a queue --</option>
-                                           <!--  @if($queues)
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p><b>Queue to Call</b></p>
+                                        <select class="form-control" name="callingqueues" id="callingqueues">
+                                            <option>--Select Queue--</option>
+                                             @if($queues)
                                                 @foreach($queues as $queue)
                                                     <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}} ({{$queue->OC_QUEUES_ASSIGNEDDEPTID}} )</option>
                                                 @endforeach
-                                            @endif -->
+                                            @endif
                                         </select>
-                                        <button type="button" id="speak" class="btn btn-primary m-t-15 waves-effect">CALL PATIENT</button>
-                                       <button type="button" class="btn btn-primary m-t-15 waves-effect pull-right"  id ="callnext" style="display:none" >CALL NEXT</button>
-                                </div>
-                                {{ csrf_field() }}
+                                         <button type="button" id="loadpatients" class="btn btn-primary m-t-15 waves-effect">LOAD PATIENTS</button>
+                                    </div>
+                                </form>
                             </div>
                             
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="display:none;">
                     <div class="card">
-                        <div class="header">
+                    <div class="header">
                             <div class="row clearfix">
                                 <div class="col-xs-12 col-sm-6">
                                     <h2>ON CALL</h2>
-                                    <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <p><b>Patient Name: <p id="msg" style="display:none;"></p> 
-                                    <p><b> @if($patientTobeCalled)
-                                    @foreach($patientTobeCalled as $patientTobeCall)
-                                    <span data-name="{{$patientTobeCall->patientname}}">{{$patientTobeCall->patientname}}</span>
-                                    </b></p>
-                                    <input type="checkbox" id="seen" class="filled-in2" name="seen"/>
-                                    <label for="seen">Seen</label>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                    <p><b>Queue Number: 
-                                    </b></p>
-                                    <p><b>
-                                    {{$patientTobeCall->queueno}}
-                                    @endforeach
-                                    @endif
-                                    </b></p>
-                                    <input type="checkbox" id="noshow" class="filled-in2" name="noshow"/>
-                                    <label for="noshow">No Show</label>
-                                </div>
                                 </div>
                                 
                             </div>
                         </div>
                         <div class="body">
+                            <div class="row clearfix">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <div class="isa_error" style="border: 2px solid #fff;height:40px;background:red;border-radius:8px;padding-top:10px;color:#fff;font-size:12px;margin-top:-25px;margin-bottom:3px;text-align:center;display:none;">
+                                        <i class="fa fa-times-circle"></i>
+                                    </div>
+                                    <div class="isa_success" style="border: 2px solid #fff;height:40px;background:green;border-radius:8px;padding-top:10px;color:#fff;font-size:12px;margin-top:-25px;margin-bottom:3px;text-align:center;display:none;">
+                                       <i class="fa fa-times-circle"></i>
+                                    </div>
+                                    <p><b>Patient Name: <p id="msg" style="display:none;"></p> 
+                                    <p><b> @if($patientTobeCalled)
+                                    @foreach($patientTobeCalled as $patientTobeCall)
+                                    <span data-name="{{$patientTobeCall->firstname}}">{{$patientTobeCall->firstname}}&nbsp;&nbsp;{{$patientTobeCall->lastname}}</span>
+                                    </b></p>
+                                    <input type="checkbox" id="seen" value="SEEN" class="filled-in2" name="seen"/>
+                                    <label for="seen">Seen</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="noshow" value = "NS" class="filled-in3" name="noshow"/>
+                                    <label for="noshow">No Show</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <!-- <input type="checkbox" id="transfer" value = "TR" class="filled-in4" name="transfer"/>
+                                    <label for="transfer">Transfer</label> -->
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    
+                                    <p><b>Queue Number: 
+                                    </b>&nbsp;&nbsp;&nbsp;&nbsp;<b>
+                                    <span id="objectId" style="display:none;">{{$patientTobeCall->oc_queues_objectid}}</span>
+                                    {{$patientTobeCall->oc_queue_patientnumber}}
+                                    @endforeach
+                                    @endif
+                                    </b></p>
+                                    <p style="display:none;" id="transferqueue"><b>Select Queues</b>
+                                    <select class="form-control show-tick" >
+                                        <option value="">-- Please select a queue --</option>
+                                        @if($queues)
+                                            @foreach($queues as $queue)
+                                                <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}} ({{$queue->OC_QUEUES_ASSIGNEDDEPTID}} )</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    </p>
+                                    {{ csrf_field() }}
+                                   
+                                       <button type="button" class="btn btn-primary m-t-15 waves-effect pull-right"  id ="callnext" style="display:none" >CALL NEXT</button>
+                                </div>
+                            </div>
+                        </div>
+                    <!--     <div class="body">
                                 <div id="page-wrapper">
                                  <p id="msg" style="display:none;"></p> 
                                 <!-- <marquee><h1 id="speech-msg" x-webkit-speech>TICKET NAMBARI 123344</h1></marquee> -->
-                                  <input type="text" readonly="readonly" value="Ticket Number A1 ; Please Proceed to Counter number 12" name="speech-msg" id="speech-msg" x-webkit-speech width="100%" style="display:none;">
+                                  <!-- <input type="text" readonly="readonly" value="Ticket Number A1 ; Please Proceed to Counter number 12" name="speech-msg" id="speech-msg" x-webkit-speech width="100%" style="display:none;">
                                     <div class="option" style="display:none;">
                                         <label for="voice">Voice</label>
                                         <select name="voice" id="voice"></select>
@@ -648,11 +665,11 @@
                                         <input type="range" min="0" max="2" step="0.1" name="pitch" id="pitch" value="1">
                                     </div>
                                 </div>
-                        </div>
+                        </div> --> 
                     </div>
                 </div>
             </div>
-            <div class="row clearfix">
+            <div class="row clearfix" style="display:none;">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="header">
@@ -664,17 +681,18 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable queues">
+                            <!-- Retrieve Patients to be called in a tabular view -->
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable queuestobecalled">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>Patient Name</th>
                                             <th>IP Number</th>
                                             <th>Department</th>
-                                            <th>Queues</th>
+                                            <th>Queue </th>
+                                            <th>Queue No</th>
                                             <th>Start date</th>
                                             <th>Called?</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -685,32 +703,16 @@
                                                 <tr>
                                                     <td><?php echo $n ?></td>
                                                     <td id="patientname">{{ $todayQueue->firstname}} &nbsp; {{ $todayQueue->lastname}}</td>
-                                                    <td id="patientip">{{ $todayQueue->Encounter_ip}}</td>
+                                                    <td id="patientip">{{ $todayQueue->personid}}</td>
                                                     <td>{{ $todayQueue->Department}}</td>
-                                                    <td id="queuenumber">
-                                                        @if($todayQueue->Department=='OPT')   
-                                                            {{$todayQueue->Department.'-'.$a}}
-                                                            <?php $a++;  ?>
-                                                        @elseif($todayQueue->Department=='OTH')   
-                                                        {{$todayQueue->Department.'-'.$b}}
-                                                        <?php $b++;  ?>
-                                                        @endif
-                                                    </td>
-                                                    <td id="patienttime">{{ $todayQueue->Audit_Timestamp}}</td>
-                                                    
-                                                    <td>YES</td>
-                                                    <td><button type="button" class="btn btn-primary waves-effect">RECALL</button> </td>
+                                                    <td>{{ $todayQueue->OC_QUEUES_QUEUENAME}}</td>
+                                                    <td id="queuenumber">{{$todayQueue->oc_queue_patientnumber}}</td>
+                                                    <td id="patienttime">{{ $todayQueue->oc_queue_begin}}</td>
+                                                    <td>{{$todayQueue->oc_patient_calledstatus}}</td>
                                                 </tr>
-                                                  
                                                 @endforeach
-
                                             @else
-
-                                            <p><strong>Invalid:</strong>No Patients Yet</p>
-
                                             @endif
-                                        
-                                      
                                     </tbody>
                                 </table>
                             </div>
@@ -719,11 +721,7 @@
                 </div>
             </div>
         </div>
-        <div id="outprint" style="display:none;">
-            Welcome to CCBRT
-        </div>
     </section>
-
     <!-- Jquery Core Js -->
     <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
@@ -739,85 +737,94 @@
     <script src="{{asset('plugins/flot-charts/jquery.flot.pie.js')}}"></script>
     <script src="{{asset('plugins/flot-charts/jquery.flot.categories.js')}}"></script>
     <script src="{{asset('plugins/flot-charts/jquery.flot.time.js')}}"></script>
-    <script src="../../plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     <script src="{{asset('plugins/jquery-sparkline/jquery.sparkline.js')}}"></script>
-
-    <!-- Custom Js -->
     <script src="{{asset('js/admin.js')}}"></script>
     <script src="{{asset('js/pages/index.js')}}"></script>
- <script src="{{asset('js/voice/index.js')}}"></script>
-    <!-- Demo Js -->
     <script src="{{asset('js/demo.js')}}"></script>
+    <!-- <script src="{{asset('js/voice/index.js')}}"></script> -->
     <script type="text/javascript">
-   $(document).ready(function () {
-$('.queues').DataTable();
-var jina = $(this).data('name');
-});
-    var fullname,queues;
-   $(".queues").on("click", "#printQueue", function (){ 
-          fullname = $(this).data('patientname');
-          queues = $(this).data('queue');
-     
-        // $('.queues tr').each(function() {
-            // var patName = $(".queues").find("#patientname").html();    
-             // $('#outprint').append(fullname);
-         // });
-
-        PrintElem('outprint');
-         // $("#outprint").printArea({ mode: 'popup', popClose: true });
-
+    $('.queuestobecalled').DataTable();
+    $(document).ready(function () {
+    var jina = $(this).data('name');
     });
- //   $('.changeRoom').change(function(){
- //  $('#retrievedQueues').val('');
- // });
-
-    // $('select.changeRoom').change(function(){
-
-    //     var searchqueueform = $('#searchqueueform').serializeArray();
-    //     var url = $('#searchqueueform').attr('action');
-    //   var selectedRoom = $('select.changeRoom').val();
-    
-    //    $.ajax({
-    //        type: 'POST',
-    //       url: url,
-    //       data: searchqueueform,
-    //       success: function(response){ 
-    //         if((response.sms==1 )){
-    //             // for (var i = 0; i < response.allqueues.length; i++) {
-    //             //  $(".allqs").append("<option value= "+response.allqueues[i].OC_QUEUES_OBJECTID+">" + response.allqueues[i].OC_QUEUES_QUEUENAME + "</option>");
-    //             // }
-    //             $.each(response.allqueues, function (i, item) {
-    //                 $('#retrievedQueues').append($('<option>', { 
-    //                     value: response.allqueues[i].OC_QUEUES_QUEUENAME,
-    //                     text : response.allqueues[i].OC_QUEUES_QUEUENAME  
-    //                 }));
-    //                // alert("asdf");
-    //             });
-    //         }
-    //       },error:function(response){
-    //                  ALERT('error');
-    //         }
-    //     });
-
-    // });
-    $('.changeRoom').change(function(){
+   //Call Next
+    $("#callnext").on("click",function(){
+        var selectedCheckbox ="";
+        var patientId = $('#objectId').text();
+    if(document.getElementById('seen').checked){
+        var seenValue = $('#seen').val();
+        selectedCheckbox = seenValue;
+    }else if (document.getElementById('transfer').checked){
+        var transferValue = $('#transfer').val();
+        selectedCheckbox = transferValue;
+    }else if(document.getElementById('noshow').checked){
+        var noshowValue = $('#noshow').val();
+        selectedCheckbox = noshowValue;
+    }   
+    var _token = $('input[name="_token"]').val();
+            $.ajax({
+                url:"{{route('updateCalledPatient')}}",
+                method: "POST",
+                data:{status:selectedCheckbox, patId:patientId, _token:_token},
+                success:function(result){
+                    if(result.sms==1 ){
+                        $('.isa_error').slideUp("slow");
+                        $('.isa_success').text('SUCCESSFULLY UPDATED')
+                         $('.isa_success').fadeIn('slow', function(){
+                           $('.isa_success').delay(8000).fadeOut();
+                           window.location = window.location.href;
+                           // window.location = "http://localhost/openclinic/main.do?Page=curative/index.jsp&ts=1536246803106&PersonID=729323"; 
+                        });
+                    }else{
+                        alert(result.sms);
+                    }
+                }
+            })    
+   });
+    $('select[name="changeRoom"]').change(function(){
         if($(this).val() !=''){
             var select = $(this).attr("id");
-            var value = $(this).val();
+            var roomValue = $(this).val();
             var dependent = $(this).data('dependent');
-            var _token = $('input[name="_token"]').val();
 
+            var _token = $('input[name="_token"]').val();
             $.ajax({
-                url:"{{route('getQueues')}}",
-                method: "POST",
-                data:{select:select, value:value, _token:_token, dependent:dependent},
+                url:'/getQueues/'+roomValue,
+                type: "GET",
+                dataType:"json",
                 success:function(result){
-                    $('#'+dependent).html(result);
+                    // var x = document.getElementById("a");
+                    // a.remove();
+                    // $('select[name="callingqueues"]').change(function(){
+                    //     alert("hi");
+                    // });
+                    console.log(result);
+                    $.each(result, function(key, value){
+                        $('select[name="callingqueues"]').append('<option value="'+ key.OC_QUEUES_ASSIGNEDDEPTID +'">' + value.OC_QUEUES_QUEUENAME + '</option>');
+                    });
                 }
-            })
+            });
         }
+    });
+    $("#loadpatients").on("click",function(){
+            var queueid = $("#callingqueues");
+
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                url:'/calls/'+queueid,
+                type: "GET",
+                dataType:"json",
+                success:function(result){
+                }
+            });
+    });
+    $("#transfer").change(function (){ 
+      $('#transferqueue').show();
+      $('#speak').hide();
+       $('#callnext').show();
     });
     $("#noshow").change(function (){ 
       $('#callnext').toggle();
@@ -827,33 +834,6 @@ var jina = $(this).data('name');
       $('#callnext').toggle();
       $('#speak').toggle();
     });
-    function PrintElem(elem)
-        {
-            var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-
-            mywindow.document.write('<html><head><title>CCBRT</title>');
-            mywindow.document.write('</head><body>');
-            mywindow.document.write('<p>Name: '+ fullname +'</p>');
-            mywindow.document.write('<p>IP: '+ document.getElementById("patientip").innerText +'</p>');
-            mywindow.document.write('<p><center><h1><b> '+ queues +'</b></h1></center></p>');
-            mywindow.document.write(document.getElementById(elem).innerHTML);
-            mywindow.document.write('</body></html>');
-
-            mywindow.document.close(); // necessary for IE >= 10
-            mywindow.focus(); // necessary for IE >= 10*/
-
-            mywindow.print();
-            mywindow.close();
-
-            return true;
-        }
-        function printContent(el){
-            var restorepage = $('body').html();
-            var printcontent = $('#' + el).clone();
-            $('body').empty().html(printcontent);
-            window.print();
-            $('body').html(restorepage);
-        }
     </script>
 </body>
 
