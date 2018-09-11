@@ -15,7 +15,7 @@
 Route::get('dashboard', 'StaffDashboard@homepage');
 Route::get('/', 'LoginController@getHomepage');
 Route::get('calls', 'StaffDashboard@callPatient');
-Route::get('calls/{pid}', 'StaffDashboard@callPatient');
+Route::get('calls/{pid}', 'StaffDashboard@callPatients');
 Route::get('waitingpatients', 'StaffDashboard@queuedpatients');
 Route::get('waiting_private_patients', 'StaffDashboard@queuedppatients');
 Route::get('waiting_standard_patients', 'StaffDashboard@queuedspatients');
