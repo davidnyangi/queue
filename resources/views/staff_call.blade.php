@@ -580,6 +580,7 @@
                                             @endif
                                         </select>
                                          <button type="button" id="loadpatients" class="btn btn-primary m-t-15 waves-effect">LOAD PATIENTS</button>
+                                         <button type="button" id="loadpatients" class="btn btn-primary m-t-15 waves-effect right">LOAD PATIENTS</button>
                                     </div>
                                 </form>
                             </div>

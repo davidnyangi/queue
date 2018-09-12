@@ -466,6 +466,9 @@
     $("#closemodal").on("click", function(){
         $('.isa_error').slideUp("slow");
         $('.isa_success').slideUp("slow");
+        var ip=$('#pname2').val()
+        
+        // window.location = "http://openclinic/openclinic/main.do?Page=curative/index.jsp&ts=1536246803106&PersonID="+ip; 
     window.location = window.location.href;
     window.close();
     });

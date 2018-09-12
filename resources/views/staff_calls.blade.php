@@ -281,7 +281,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="images/user.png" width="48" height="48" alt="User" />
+                    <img src="{{URL::to('images/user.png')}}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome</div>
@@ -579,7 +579,8 @@
                                                 @endforeach
                                             @endif
                                         </select>
-                                         <button type="button" id="loadpatients" class="btn btn-primary m-t-15 waves-effect">LOAD PATIENTS</button>
+                                        <button type="button" id="loadpatients" class="btn btn-primary m-t-15 waves-effect">LOAD PATIENTS</button>
+                                        <button type="button" id="callpatients" class="btn btn-primary m-t-15 waves-effect right">CALL PATIENT</button>
                                     </div>
                                 </form>
                             </div>
@@ -587,7 +588,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="display:none;">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="display:none;" id="oncalldiv">
                     <div class="card">
                     <div class="header">
                             <div class="row clearfix">
@@ -622,8 +623,9 @@
                                     
                                     <p><b>Queue Number: 
                                     </b>&nbsp;&nbsp;&nbsp;&nbsp;<b>
-                                    <span id="objectId" style="display:none;">{{$patientTobeCall->oc_queues_objectid}}</span>
+                                    <span id="objectId" style="display:none;">{{$patientTobeCall->aoc_queues_objectid}}</span>
                                     {{$patientTobeCall->oc_queue_patientnumber}}
+                                    <span id="pId" style="display:none;">{{$patientTobeCall->Encounter_ip}}</span>
                                     @endforeach
                                     @endif
                                     </b></p>
@@ -639,7 +641,8 @@
                                     </p>
                                     {{ csrf_field() }}
                                    
-                                       <button type="button" class="btn btn-primary m-t-15 waves-effect pull-right"  id ="callnext" style="display:none" >CALL NEXT</button>
+                                    <button type="button" class="btn btn-primary m-t-15 waves-effect left"  id ="openrecord">OPEN PATIENT RECORD</button>
+                                    <button type="button" class="btn btn-primary m-t-15 waves-effect pull-right"  id ="callnexts" style="display:none" >CALL NEXT</button>
                                 </div>
                             </div>
                         </div>
@@ -675,7 +678,7 @@
                         <div class="header">
                             <div class="row clearfix">
                                 <div class="col-xs-12 col-sm-12">
-                                    <h2>TO BE CALLED</h2>
+                                    <h2>PATIENTS TO BE CALLED</h2>
                                 </div>
                             </div>
                         </div>
@@ -691,7 +694,8 @@
                                             <th>Department</th>
                                             <th>Queue </th>
                                             <th>Queue No</th>
-                                            <th>Start date</th>
+                                            <th>Start Time</th>
+                                            <th>Waiting Time</th>
                                             <th>Called?</th>
                                         </tr>
                                     </thead>
@@ -707,7 +711,8 @@
                                                     <td>{{ $todayQueue->Department}}</td>
                                                     <td>{{ $todayQueue->OC_QUEUES_QUEUENAME}}</td>
                                                     <td id="queuenumber">{{$todayQueue->oc_queue_patientnumber}}</td>
-                                                    <td id="patienttime">{{ $todayQueue->oc_queue_begin}}</td>
+                                                    <td id="patienttime">{{ $todayQueue->Printedtime}}</td>
+                                                    <td id="waitingtime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td>
                                                     <td>{{$todayQueue->oc_patient_calledstatus}}</td>
                                                 </tr>
                                                 @endforeach
@@ -751,7 +756,7 @@
     var jina = $(this).data('name');
     });
    //Call Next
-    $("#callnext").on("click",function(){
+    $("#callnexts").on("click",function(){
         var selectedCheckbox ="";
         var patientId = $('#objectId').text();
     if(document.getElementById('seen').checked){
@@ -765,8 +770,8 @@
         selectedCheckbox = noshowValue;
     }   
     var _token = $('input[name="_token"]').val();
-            $.ajax({
-                url:"{{route('updateCalledPatient')}}",
+        $.ajax({
+                url:"{{route('updateCalledPatientStatus')}}",
                 method: "POST",
                 data:{status:selectedCheckbox, patId:patientId, _token:_token},
                 success:function(result){
@@ -774,15 +779,15 @@
                         $('.isa_error').slideUp("slow");
                         $('.isa_success').text('SUCCESSFULLY UPDATED')
                          $('.isa_success').fadeIn('slow', function(){
-                           $('.isa_success').delay(8000).fadeOut();
+                           $('.isa_success').delay(9000).fadeOut();
                            window.location = window.location.href;
                            // window.location = "http://localhost/openclinic/main.do?Page=curative/index.jsp&ts=1536246803106&PersonID=729323"; 
                         });
                     }else{
                         alert(result.sms);
                     }
-                }
-            })    
+            }
+        })    
    });
     $('select[name="changeRoom"]').change(function(){
         if($(this).val() !=''){
@@ -821,17 +826,24 @@
                 }
             });
     });
+    $("#callpatients").on("click",function(){
+        $("#oncalldiv").show();
+    });
+     $("#openrecord").on("click",function(){
+        var a =$("#pId").text();
+      window.location = "http://192.168.6.72/openclinic/patientslist.do?findPersonID="+a; 
+    });
     $("#transfer").change(function (){ 
       $('#transferqueue').show();
       $('#speak').hide();
        $('#callnext').show();
     });
     $("#noshow").change(function (){ 
-      $('#callnext').toggle();
+      $('#callnexts').toggle();
       $('#speak').toggle();
     });
     $("#seen").change(function (){ 
-      $('#callnext').toggle();
+      $('#callnexts').toggle();
       $('#speak').toggle();
     });
     </script>
