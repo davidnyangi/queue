@@ -14,11 +14,27 @@ class StaffDashboard extends Controller
 	function updateCallingStatus(Request $request){
 		$status = $request->get('status');
 		$patId = $request->get('patId');
-		$updateCallingStatusInDB = DB::connection('sqlsrv')->update('update openclinic.dbo.OC_TODAYSQUEUES set OC_PATIENT_CALLEDSTATUS=? where OC_QUEUES_OBJECTID=?',[$status,$patId]);
-		if($updateCallingStatusInDB)
+		date_default_timezone_set('Africa/Nairobi');
+		$todaysdate = date('Y-m-d h:i:s a', time());
+			if($status=='SEEN'){
+				$updateCallingStatusInDB = DB::connection('sqlsrv')->update('update openclinic.dbo.OC_TODAYSQUEUES set OC_PATIENT_CALLEDSTATUS=?,OC_PATIENT_SEENTS=? where OC_QUEUES_OBJECTID=?',[$status,$todaysdate,$patId]);
+			if($updateCallingStatusInDB)
             return response()->json(array('sms'=>'1'));
     		else
             return response()->json(array('sms'=>'2'));
+    		}elseif($status=='NS'){
+    			$updateCallingStatusInDB = DB::connection('sqlsrv')->update('update openclinic.dbo.OC_TODAYSQUEUES set OC_PATIENT_CALLEDSTATUS=?,OC_PATIENT_NOSHOWTS=? where OC_QUEUES_OBJECTID=?',[$status,$todaysdate,$patId]);
+			if($updateCallingStatusInDB)
+            return response()->json(array('sms'=>'1'));
+    		else
+            return response()->json(array('sms'=>'2'));
+    		}elseif($status=='TR'){
+    			$updateCallingStatusInDB = DB::connection('sqlsrv')->update('update openclinic.dbo.OC_TODAYSQUEUES set OC_PATIENT_CALLEDSTATUS=?,OC_PATIENT_TRANSFERTS=? where OC_QUEUES_OBJECTID=?',[$status,$todaysdate,$patId]);
+			if($updateCallingStatusInDB)
+            return response()->json(array('sms'=>'1'));
+    		else
+            return response()->json(array('sms'=>'2'));
+    		}
 	}
 	public function add($pid){
 		 try {

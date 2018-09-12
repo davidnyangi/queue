@@ -359,7 +359,7 @@
                                     </thead>
                                     <tbody>
                                             @if($todaysQueue)
-                                                <?php $dept="";$n=0;$a=1;$b=1;$c=1; $e=1;$po=1;$popt=1;$sopt=1;$srp=1;$prp=1;$sVV=1;$srpo=1;$prpo=1;$pgyn=1;$sgyn=1;$se=1;$sent=1;$sImaging=1;$pImaging=1;$pVV=1;?>
+                                                <?php $n=0;?>
                                                 @foreach($todaysQueue as $todayQueue)
                                                 <?php $n++;  ?>
                                                 <tr>

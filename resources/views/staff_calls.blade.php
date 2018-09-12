@@ -614,7 +614,7 @@
                                     </b></p>
                                     <input type="checkbox" id="seen" value="SEEN" class="filled-in2" name="seen"/>
                                     <label for="seen">Seen</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="checkbox" id="noshow" value = "NS" class="filled-in3" name="noshow"/>
+                                    <input type="checkbox" id="noshow" value="NS" class="filled-in3" name="noshow"/>
                                     <label for="noshow">No Show</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <!-- <input type="checkbox" id="transfer" value = "TR" class="filled-in4" name="transfer"/>
                                     <label for="transfer">Transfer</label> -->
@@ -696,7 +696,6 @@
                                             <th>Queue No</th>
                                             <th>Start Time</th>
                                             <th>Waiting Time</th>
-                                            <th>Called?</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -713,7 +712,6 @@
                                                     <td id="queuenumber">{{$todayQueue->oc_queue_patientnumber}}</td>
                                                     <td id="patienttime">{{ $todayQueue->Printedtime}}</td>
                                                     <td id="waitingtime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td>
-                                                    <td>{{$todayQueue->oc_patient_calledstatus}}</td>
                                                 </tr>
                                                 @endforeach
                                             @else
@@ -762,26 +760,25 @@
     if(document.getElementById('seen').checked){
         var seenValue = $('#seen').val();
         selectedCheckbox = seenValue;
-    }else if (document.getElementById('transfer').checked){
-        var transferValue = $('#transfer').val();
-        selectedCheckbox = transferValue;
+
     }else if(document.getElementById('noshow').checked){
         var noshowValue = $('#noshow').val();
         selectedCheckbox = noshowValue;
     }   
+     
     var _token = $('input[name="_token"]').val();
         $.ajax({
                 url:"{{route('updateCalledPatientStatus')}}",
                 method: "POST",
                 data:{status:selectedCheckbox, patId:patientId, _token:_token},
                 success:function(result){
+
                     if(result.sms==1 ){
                         $('.isa_error').slideUp("slow");
                         $('.isa_success').text('SUCCESSFULLY UPDATED')
                          $('.isa_success').fadeIn('slow', function(){
                            $('.isa_success').delay(9000).fadeOut();
-                           window.location = window.location.href;
-                           // window.location = "http://localhost/openclinic/main.do?Page=curative/index.jsp&ts=1536246803106&PersonID=729323"; 
+                           window.location = window.location.href; 
                         });
                     }else{
                         alert(result.sms);
@@ -829,18 +826,18 @@
     $("#callpatients").on("click",function(){
         $("#oncalldiv").show();
     });
-     $("#openrecord").on("click",function(){
+    $("#openrecord").on("click",function(){
         var a =$("#pId").text();
       window.location = "http://192.168.6.72/openclinic/patientslist.do?findPersonID="+a; 
     });
     $("#transfer").change(function (){ 
       $('#transferqueue').show();
       $('#speak').hide();
-       $('#callnext').show();
+       $('#callnexts').show();
     });
     $("#noshow").change(function (){ 
-      $('#callnexts').toggle();
-      $('#speak').toggle();
+          $('#callnexts').toggle();
+     // $('#speak').toggle();
     });
     $("#seen").change(function (){ 
       $('#callnexts').toggle();
