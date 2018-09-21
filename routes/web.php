@@ -38,6 +38,7 @@ Route::post('savequeuetoscreen','StaffDashboard@setDefaultDisplayQueue');
 Route::get('getQueues/{id}','StaffDashboard@fetch');
 Route::get('add_patient_to_queue/{pid}','StaffDashboard@add');
 Route::post('updateCalledPatient',array('as'=>'updateCalledPatient','uses'=>'StaffDashboard@updateCallingStatus'));
+Route::post('filterpatients',array('as'=>'filterpatients','uses'=>'StaffDashboard@filterPatients'));
 Route::post('updateCalledPatientStatus',array('as'=>'updateCalledPatientStatus','uses'=>'StaffDashboard@updateCallingStatus'));
 Route::post('savequeuetodept','StaffDashboard@assignqueuetodepts');
 Route::get('admin', function () {

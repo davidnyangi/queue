@@ -548,8 +548,8 @@
                     <div class="card">
                         <div class="header">
                             <div class="row clearfix">
-                                <div class="col-xs-12 col-sm-6">
-                                    <h2>NEW CALL</h2>
+                                <div class="col-xs-12 col-md-12">
+                                    <h2>FILTER PATIENTS TO CALL </h2>
                                 </div>
                                 
                             </div>
@@ -685,7 +685,7 @@
                         <div class="body">
                             <div class="table-responsive">
                             <!-- Retrieve Patients to be called in a tabular view -->
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable queuestobecalled">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable queuestobecalled" id="patientstocall">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -812,14 +812,33 @@
         }
     });
     $("#loadpatients").on("click",function(){
-            var queueid = $("#callingqueues");
-
+            var queueid = $("#callingqueues").val();
+            var userid = {{$userid}};
             var _token = $('input[name="_token"]').val();
             $.ajax({
-                url:'/calls/'+queueid,
-                type: "GET",
-                dataType:"json",
+                url:"{{route('filterpatients')}}",
+                method: "POST",
+                data:{queueid:queueid, userid:userid, _token:_token},
                 success:function(result){
+                            console.log(result);
+                        // $('#patientstocall tr').not(':first').not(':last').remove();
+                        $('#patientstocall tr').not(':first').remove();
+                        var html = '';
+                        for(var i = 0; i < result.length; i++){
+                            html += '<tr>'+
+                                        '<td>' +( i+1) + '</td>' +
+                                        '<td>' + result[i].firstname +' '+result[i].lastname  + '</td>' +
+                                        '<td>' + result[i].personid + '</td>' +
+                                        '<td>' + result[i].Department + '</td>' +
+                                        '<td>' + result[i].OC_QUEUES_QUEUENAME + '</td>' +
+                                        '<td>' + result[i].oc_queue_patientnumber + '</td>' +
+                                        '<td>' + result[i].Printedtime + '</td>' +
+                                        '<td>' +timeConvert(result[i].Wait) + '</td>' +
+                                    '</tr>';
+                            }   
+                        $('#patientstocall tr').first().after(html);
+                },
+                error: function (result) {
                 }
             });
     });
@@ -830,6 +849,14 @@
         var a =$("#pId").text();
       window.location = "http://192.168.6.72/openclinic/patientslist.do?findPersonID="+a; 
     });
+    function timeConvert(n) {
+var num = n;
+var hours = (num / 60);
+var rhours = Math.floor(hours);
+var minutes = (hours - rhours) * 60;
+var rminutes = Math.round(minutes);
+return rhours + " h " + rminutes + " m";
+}
     $("#transfer").change(function (){ 
       $('#transferqueue').show();
       $('#speak').hide();

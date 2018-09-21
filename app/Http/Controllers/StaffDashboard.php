@@ -36,6 +36,38 @@ class StaffDashboard extends Controller
             return response()->json(array('sms'=>'2'));
     		}
 	}
+	public function filterPatients(Request $request){
+		$user = $request->get('userid');
+		$queueid = $request->get('queueid');
+
+		try{
+			$filteredQueue = DB::connection('sqlsrv')->select('select f.* from (select substring(convert(varchar,cast(c.OC_ENCOUNTER_BEGINDATE  as datetime)),12,17) 
+Timea,substring(convert(varchar,cast(a.OC_QUEUE_BEGIN as datetime)),12,17) 
+Printedtime,d.personid,d.firstname,d.middlename,d.lastname,OC_ENCOUNTER_PATIENTUID  Encounter_ip,e.OC_ENCOUNTER_SERVICEUID Department,
+OC_ENCOUNTER_BEGINDATE,b.oc_queues_objectid,a.oc_queues_objectid aoc_queues_objectid,b.OC_QUEUES_QUEUENAME,a.oc_queue_patientnumber,
+a.oc_patient_calledstatus,
+a.oc_queue_begin,DATEDIFF(MINUTE , a.OC_QUEUE_BEGIN,CONVERT(datetime, getdate())) AS Wait ,case when 
+(d.personid IN(SELECT distinct(OC_QUEUE_SUBJECTUID)
+  FROM [openclinic].[dbo].[OC_TODAYSQUEUES] where convert(date,OC_QUEUE_BEGIN) = CONVERT(date, getdate()))) then \'YES\'
+ELSE \'NO\' END AS \'Printed\' from OC_TODAYSQUEUES a,OC_AVAILABLEQUEUES b,oc_encounters c,ocadmin.dbo.Admin d,
+OC_ENCOUNTER_SERVICES e where a.OC_QUEUE_END is null 
+and CONVERT(date, a.oc_queue_begin) = CONVERT(date, getdate())
+ and a.oc_patient_calledstatus = \'NO\' and
+ (c.OC_ENCOUNTER_OBJECTID = e.OC_ENCOUNTER_OBJECTID and e.OC_ENCOUNTER_SERVICEUID like \'%PRV%\') and
+  b.OC_QUEUES_OBJECTID = a.OC_QUEUE_ID and
+  b.oc_queues_objectid = ? and 
+  d.personid = a.OC_QUEUE_SUBJECTUID and
+ ( a.OC_QUEUE_SUBJECTUID = c.OC_ENCOUNTER_PATIENTUID and
+  convert(date,c.OC_ENCOUNTER_BEGINDATE)=CONVERT(date,getdate()) and c.OC_ENCOUNTER_ENDDATE is null)) f
+inner join (SELECT value FROM [ocadmin].[dbo].[UserParameters] where userid = ? and parameter=\'defaultserviceid\') s 
+on f.Department like \'%\'+substring(s.value,5,3)+\'%\'
+order by f.OC_QUEUE_BEGIN asc',[$queueid,$user]);
+			return response()->json($filteredQueue);
+		} catch (\Exception $e) {
+		    die("Could not connect to the database.  Please check your configuration.");
+		}
+		
+	}
 	public function add($pid){
 		 try {
 		 	$patientTobeCalled = DB::connection('sqlsrv')->select('select top 1 a.personid,a.firstname,a.middlename,a.lastname,e.Encounter_ip from ocadmin.dbo.Admin a, openclinic.dbo.Encounter_queue_tokens e where cast(a.personid as varchar(100)) = e.Encounter_ip order by Queue_id asc');
@@ -50,7 +82,10 @@ Timea,DATEDIFF (MINUTE , e.OC_ENCOUNTER_BEGINDATE,CONVERT(datetime, getdate())) 
 cast(a.personid as varchar(100)) = e.OC_ENCOUNTER_PATIENTUID  and
 e.OC_ENCOUNTER_PATIENTUID = ? and
 convert(date,oc_encounter_begindate) = CONVERT(date, getdate()) and OC_ENCOUNTER_ENDDATE is null order by wait asc',[$pid]);
-		 	$queues = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_AVAILABLEQUEUES');
+		 	$queues = DB::connection('sqlsrv')->select('select aq.* from [openclinic].[dbo].[oc_availablequeues] aq 
+inner join (SELECT Department
+  FROM [openclinic].[dbo].[WaitingPatients] where Encounter_ip = ?) D 
+  on aq.OC_QUEUES_ASSIGNEDDEPTID like \'%\'+D.Department+\'%\'',[$pid]);
 		 	$screens = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_QUEUE_SCREENS');
 		    return view('ocqueues_private_patients', compact('patientTobeCalled','todaysQueue','queues','screens'));
 		} catch (\Exception $e) {
@@ -88,13 +123,6 @@ convert(date,oc_encounter_begindate) = CONVERT(date, getdate()) and OC_ENCOUNTER
 		 try {
 		   date_default_timezone_set('Africa/Nairobi');
 		 	 	$todaysDate = date('Y-m-d');
-			 	
-  				// $standard = DB::table('oc_encounters')
-  				// 			->join('oc_debets', 'oc_debets.oc_debet_encounteruid', '=',  'convert(varchar,oc_encounter_serverid)+\'.\'+convert(varchar,oc_encounter_objectid)')
-  				// 			->where('oc_debets.OC_DEBET_SERVICEUID', 'LIKE',  '%STD%')
-  				// 			->whereBetween('convert(smalldatetime,oc_encounters.OC_ENCOUNTER_BEGINDATE)',['2018-06-15 07:30:00', '2018-06-15 08:30:59'])
-  				// 			->distinct('oc_encounters.oc_encounter_patientuid');
-  				
   				$standard0 = DB::connection('sqlsrv')->select('select distinct(OC_ENCOUNTER_PATIENTUID)
 					from openclinic.dbo.oc_encounters inner join oc_debets on 
 					 oc_debet_encounteruid=convert(varchar,oc_encounter_serverid)+\'.\'
@@ -524,7 +552,9 @@ on f.Department like \'%\'+substring(s.value,5,3)+\'%\'
 order by f.OC_QUEUE_BEGIN asc
 ',[$userid]);
 			$rooms = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_QUEUE_ROOMS');
-			$queues = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_AVAILABLEQUEUES');
+			$queues = DB::connection('sqlsrv')->select('select aq.* from [openclinic].[dbo].[oc_availablequeues] aq 
+inner join (SELECT value FROM [ocadmin].[dbo].[UserParameters] where userid = ? and parameter=\'defaultserviceid\') D 
+  on aq.OC_QUEUES_ASSIGNEDDEPTID like \'%\'+D.value+\'%\'',[$userid]);
 		 	$todaysQueue = DB::connection('sqlsrv')->select('select f.* from (select substring(convert(varchar,cast(c.OC_ENCOUNTER_BEGINDATE  as datetime)),12,17) 
 Timea,substring(convert(varchar,cast(a.OC_QUEUE_BEGIN as datetime)),12,17) 
 Printedtime,d.personid,d.firstname,d.middlename,d.lastname,OC_ENCOUNTER_PATIENTUID  Encounter_ip,e.OC_ENCOUNTER_SERVICEUID Department,
@@ -543,7 +573,7 @@ inner join (SELECT value FROM [ocadmin].[dbo].[UserParameters] where userid = ? 
 on f.Department like \'%\'+substring(s.value,5,3)+\'%\'
 order by f.OC_QUEUE_BEGIN asc
 ',[$userid]);
-		    return view('staff_calls', compact('patientTobeCalled','todaysQueue','rooms','queues'));
+		    return view('staff_calls', compact('patientTobeCalled','todaysQueue','rooms','queues','userid'));
 		} catch (\Exception $e) {
 		    die("Could not connect to the database.  Please check your configuration.");
 		}
