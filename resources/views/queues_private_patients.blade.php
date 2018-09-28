@@ -549,7 +549,7 @@
                         else if($('#qs').val()=='9')
                             var b='I - ';
                         //Display Printing Dialog
-                       // PrintElem('outprint',response.sms2,b);
+                        PrintElem('outprint',response.sms2,b);
                      }
                  },error:function(response){
                       $('.isa_error').text(response.responseJSON.error)

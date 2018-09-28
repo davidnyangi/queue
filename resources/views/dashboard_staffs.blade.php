@@ -566,7 +566,7 @@
                                         <i class="material-icons">group</i>
                                     </div>
                                     <div class="content">
-                                        <div class="text">PATIENTS IN QUEUES</div>
+                                        <div class="text">QUEUED PATIENTS</div>
                                         <div class="number count-to" data-from="0" data-to="{{$todaysPatientsinqueues}}" data-speed="1000" data-fresh-interval="20"></div>
                                     </div>
                                 </div>

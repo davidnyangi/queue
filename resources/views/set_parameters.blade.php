@@ -557,7 +557,7 @@
                                             <option value="">-- Please select a queue --</option>
                                              @if($queues)
                                                 @foreach($queues as $queue)
-                                                    <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}}</option>
+                                                    <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}} ({{$queue->OC_QUEUES_QUEUEDESC}})</option>
                                                 @endforeach
                                             @endif
                                         </select>
@@ -617,7 +617,7 @@
                                             <option value="">-- Please select a queue --</option>
                                              @if($queues)
                                                 @foreach($queues as $queue)
-                                                    <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}}</option>
+                                                    <option value="{{$queue->OC_QUEUES_OBJECTID}}">{{$queue->OC_QUEUES_QUEUENAME}}({{$queue->OC_QUEUES_QUEUEDESC}})</option>
                                                 @endforeach
                                             @endif
                                         </select>

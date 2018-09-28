@@ -20,7 +20,7 @@ Route::get('waitingpatients', 'StaffDashboard@queuedpatients');
 Route::get('waiting_private_patients', 'StaffDashboard@queuedppatients');
 Route::get('waiting_standard_patients', 'StaffDashboard@queuedspatients');
 Route::get('display', 'StaffDashboard@display');
-Route::get('displayent', 'StaffDashboard@display');
+Route::get('displayscreen', 'StaffDashboard@display');
 Route::get('displayeye', 'StaffDashboard@displayeye');
 Route::get('addparams', 'StaffDashboard@addparameters');
 Route::get('setparams', 'StaffDashboard@setparameters');

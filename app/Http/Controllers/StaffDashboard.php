@@ -555,7 +555,7 @@ order by f.OC_QUEUE_BEGIN asc
 			$queues = DB::connection('sqlsrv')->select('select aq.* from [openclinic].[dbo].[oc_availablequeues] aq 
 inner join (SELECT value FROM [ocadmin].[dbo].[UserParameters] where userid = ? and parameter=\'defaultserviceid\') D 
   on aq.OC_QUEUES_ASSIGNEDDEPTID like \'%\'+D.value+\'%\'',[$userid]);
-		 	$todaysQueue = DB::connection('sqlsrv')->select('select f.* from (select substring(convert(varchar,cast(c.OC_ENCOUNTER_BEGINDATE  as datetime)),12,17) 
+		 	$todaysQueue = DB::connection('sqlsrv')->select(' select ab.*,convert(char(5), abp.OC_PLANNING_PLANNEDDATE, 108) [time] from (select f.* from (select substring(convert(varchar,cast(c.OC_ENCOUNTER_BEGINDATE  as datetime)),12,17) 
 Timea,substring(convert(varchar,cast(a.OC_QUEUE_BEGIN as datetime)),12,17) 
 Printedtime,d.personid,d.firstname,d.middlename,d.lastname,OC_ENCOUNTER_PATIENTUID  Encounter_ip,e.OC_ENCOUNTER_SERVICEUID Department,
 OC_ENCOUNTER_BEGINDATE,b.oc_queues_objectid,a.oc_queues_objectid aoc_queues_objectid,b.OC_QUEUES_QUEUENAME,a.oc_queue_patientnumber,a.oc_patient_calledstatus,
@@ -570,8 +570,9 @@ and CONVERT(date, a.oc_queue_begin) = CONVERT(date, getdate())
  ( a.OC_QUEUE_SUBJECTUID = c.OC_ENCOUNTER_PATIENTUID and
   convert(date,c.OC_ENCOUNTER_BEGINDATE)=CONVERT(date,getdate()) and c.OC_ENCOUNTER_ENDDATE is null)) f
 inner join (SELECT value FROM [ocadmin].[dbo].[UserParameters] where userid = ? and parameter=\'defaultserviceid\') s 
-on f.Department like \'%\'+substring(s.value,5,3)+\'%\'
-order by f.OC_QUEUE_BEGIN asc
+on f.Department like \'%\'+substring(s.value,5,3)+\'%\') ab , openclinic.dbo.OC_PLANNING abp where ab.Encounter_ip=abp.OC_PLANNING_PATIENTUID
+and convert(date,abp.OC_PLANNING_PLANNEDDATE) = CONVERT(DATE,getdate())
+order by ab.OC_QUEUE_BEGIN asc
 ',[$userid]);
 		    return view('staff_calls', compact('patientTobeCalled','todaysQueue','rooms','queues','userid'));
 		} catch (\Exception $e) {
@@ -692,8 +693,14 @@ convert(date,oc_encounter_begindate) = CONVERT(date, getdate()) and OC_ENCOUNTER
 	}
 
 	public function display(){
-		$currentPatient = DB::connection('sqlsrv')->select('select top 1 * from openclinic.dbo.OC_TODAYSQUEUES where oc_queue_id = 1 and convert(date,OC_QUEUE_BEGIN) = convert(date, getdate()) and OC_QUEUE_END is null order by OC_QUEUE_BEGIN asc');
-		$threePatients = DB::connection('sqlsrv')->select('select top 4 * from openclinic.dbo.OC_TODAYSQUEUES where oc_queue_id = 1 and convert(date,OC_QUEUE_BEGIN) = convert(date, getdate()) and OC_QUEUE_END is null order by OC_QUEUE_BEGIN asc');
+		$currentPatient = DB::connection('sqlsrv')->select('select top 1 * from openclinic.dbo.OC_TODAYSQUEUES
+ where oc_queue_id = 1 and convert(date,OC_QUEUE_BEGIN) =
+  convert(date, getdate()) and (OC_PATIENT_CALLEDSTATUS <> \'SEEN\') AND (OC_PATIENT_CALLEDSTATUS <> \'NS\') 
+  order by OC_QUEUE_BEGIN asc');
+		$threePatients = DB::connection('sqlsrv')->select('select top 4 * from openclinic.dbo.OC_TODAYSQUEUES
+ where oc_queue_id = 1 and convert(date,OC_QUEUE_BEGIN) =
+  convert(date, getdate()) and (OC_PATIENT_CALLEDSTATUS <> \'SEEN\') AND (OC_PATIENT_CALLEDSTATUS <> \'NS\') 
+  order by OC_QUEUE_BEGIN asc');
 		$screens = DB::connection('sqlsrv')->select('select * from openclinic.dbo.OC_QUEUE_SCREENS');
 		return view('display_ent', compact('currentPatient','threePatients','screens'));
 	}

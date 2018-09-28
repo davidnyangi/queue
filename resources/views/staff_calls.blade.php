@@ -556,6 +556,9 @@
                         </div>
                         <div class="body">
                             <div class="row clearfix newcall">
+                                    <div class="filter_error" style="border: 2px solid #fff;height:40px;background:red;border-radius:8px;padding-top:10px;color:#fff;font-size:12px;margin-top:-25px;margin-bottom:3px;text-align:center;display:none;">
+                                        <i class="fa fa-times-circle"></i>
+                                    </div>
                                 <form class="form-horizontal" role="form" method="POST" action="">
                                     {{ csrf_field() }}
                                     <div class="col-md-12">
@@ -695,6 +698,7 @@
                                             <th>Queue </th>
                                             <th>Queue No</th>
                                             <th>Start Time</th>
+                                            <th>Appointment Time</th>
                                             <th>Waiting Time</th>
                                         </tr>
                                     </thead>
@@ -711,7 +715,9 @@
                                                     <td>{{ $todayQueue->OC_QUEUES_QUEUENAME}}</td>
                                                     <td id="queuenumber">{{$todayQueue->oc_queue_patientnumber}}</td>
                                                     <td id="patienttime">{{ $todayQueue->Printedtime}}</td>
-                                                    <td id="waitingtime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td>
+                                                    <td id="patienttime">{{ $todayQueue->time}}</td>
+                                                    <!-- <td id="waitingtime">{{ date('H:i', mktime(0,$todayQueue->Wait)) }} minutes</td>
+ -->                                                    <td id="waitingtime">{{ $todayQueue->Wait}} minutes</td>
                                                 </tr>
                                                 @endforeach
                                             @else
@@ -775,8 +781,8 @@
 
                     if(result.sms==1 ){
                         $('.isa_error').slideUp("slow");
-                        $('.isa_success').text('SUCCESSFULLY UPDATED')
-                         $('.isa_success').fadeIn('slow', function(){
+                        $('.isa_success').text('SUCCESSFULLY UPDATED');
+                        $('.isa_success').fadeIn('slow', function(){
                            $('.isa_success').delay(9000).fadeOut();
                            window.location = window.location.href; 
                         });
@@ -786,32 +792,44 @@
             }
         })    
    });
-    $('select[name="changeRoom"]').change(function(){
-        if($(this).val() !=''){
-            var select = $(this).attr("id");
-            var roomValue = $(this).val();
-            var dependent = $(this).data('dependent');
+    // $('select[name="changeRoom"]').change(function(){
+    //     if($(this).val() !=''){
+    //         var select = $(this).attr("id");
+    //         var roomValue = $(this).val();
+    //         var dependent = $(this).data('dependent');
 
-            var _token = $('input[name="_token"]').val();
-            $.ajax({
-                url:'/getQueues/'+roomValue,
-                type: "GET",
-                dataType:"json",
-                success:function(result){
-                    // var x = document.getElementById("a");
-                    // a.remove();
-                    // $('select[name="callingqueues"]').change(function(){
-                    //     alert("hi");
-                    // });
-                    console.log(result);
-                    $.each(result, function(key, value){
-                        $('select[name="callingqueues"]').append('<option value="'+ key.OC_QUEUES_ASSIGNEDDEPTID +'">' + value.OC_QUEUES_QUEUENAME + '</option>');
-                    });
-                }
-            });
-        }
+    //         var _token = $('input[name="_token"]').val();
+    //         $.ajax({
+    //             url:'/getQueues/'+roomValue,
+    //             type: "GET",
+    //             dataType:"json",
+    //             success:function(result){
+    //                 // var x = document.getElementById("a");
+    //                 // a.remove();
+    //                 // $('select[name="callingqueues"]').change(function(){
+    //                 //     alert("hi");
+    //                 // });
+    //                 console.log(result);
+    //                 $.each(result, function(key, value){
+    //                     $('select[name="callingqueues"]').append('<option value="'+ key.OC_QUEUES_ASSIGNEDDEPTID +'">' + value.OC_QUEUES_QUEUENAME + '</option>');
+    //                 });
+    //             }
+    //         });
+    //     }
+    // });
+    $('select[name="callingqueues"]').change(function(){
+         $('.filter_error').text('Please select room/queue');
+            $('.filter_error').slideUp("slow");
+    });
+    $('select[name="changeRoom"]').change(function(){
+         $('.filter_error').text('Please select room/queue');
+            $('.filter_error').slideUp("slow");
     });
     $("#loadpatients").on("click",function(){
+        if($("#callingqueues").val()=="" || $("#changesRoom").val()=="" ){
+            $('.filter_error').text('Please select room/queue');
+            $('.filter_error').slideDown("slow");
+        }else{
             var queueid = $("#callingqueues").val();
             var userid = {{$userid}};
             var _token = $('input[name="_token"]').val();
@@ -837,10 +855,13 @@
                                     '</tr>';
                             }   
                         $('#patientstocall tr').first().after(html);
+                        $("#oncalldiv").show();
                 },
                 error: function (result) {
                 }
             });
+        }
+            
     });
     $("#callpatients").on("click",function(){
         $("#oncalldiv").show();

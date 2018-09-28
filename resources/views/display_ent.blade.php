@@ -80,7 +80,7 @@
                              <?php $n = 0; ?>
                                     @foreach($threePatients as $threePatient)
                                         @if($n==0)
-                                        <center><h1  style="font-size: 1px;display: none;">Q - {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center>
+                                        <center><h1  style="font-size: 1px;display: none;"> {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center>
                                         <?php $n++; ?>
                                         @else
                                         <center><h1  style="font-size: 100px;"> {{$threePatient->OC_QUEUE_PATIENTNUMBER}}</h1></center> <hr/>
@@ -105,7 +105,7 @@
                             <h1  style="font-size: 160px;">
                                 @if($currentPatient)
                                      @foreach($currentPatient as $current)
-                                        Q - {{$current->OC_QUEUE_PATIENTNUMBER}}
+                                        {{$current->OC_QUEUE_PATIENTNUMBER}}
                                      @endforeach
                                 @endif
                                 </div>
@@ -154,7 +154,7 @@
     {
         window.location = window.location.href;
     }
-    setInterval('autoRefreshPage()', 300000);
+    setInterval('autoRefreshPage()', 5000);
     $('.queues').DataTable();
 
     var fullname,queues,patientip,starttime,waitingtime,dept;
